@@ -58,7 +58,7 @@ void str(int n, char l, char r) {
 int32_t main() {
     ios_base::sync_with_stdio(0);
     cin.tie(0);
-    arr(30, 1, 100);
-    arr(30, 1, 100);
+    arr(1000, -1000, 1000);
+    arr(1000, -1000, 1000);
     return 0;
 }

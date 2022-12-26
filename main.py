@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.polynomial import Polynomial
 import argparse
+import math
 
 
 def DFT(f: np.array) -> np.array:
@@ -63,7 +64,7 @@ def FFT(a: np.array, b: np.array) -> np.array:
     b.resize(deg, refcheck=False)
     result = invDFT(np.multiply(DFT(a), DFT(b)))
     result = [value.real for value in result]
-    while result[-1] < EPS:
+    while math.fabs(result[-1]) < EPS:
         result.pop()
     return result
 
@@ -74,28 +75,34 @@ def trivial(a: np.array, b: np.array):
     for i in range(0, n):
         for j in range(0, m):
             c[i + j] += a[i] * b[j]
+    c = c.tolist()
+    EPS = 1e-10
+    while math.fabs(c[-1]) < EPS:
+        c.pop()
     return c
 
 def main():
     parser = argparse.ArgumentParser(description="Program excuted FFT and trivial algorithms to multiply two polynomial")
     parser.add_argument('-a', '--algo')
+    parser.add_argument('-o', '--output')
     args = parser.parse_args()
 
     a = np.array(list(map(int, input().split())))
     b = np.array(list(map(int, input().split())))
 
-    # print(f'a(x) = {Polynomial(a)}')
-    # print(f'b(x) = {Polynomial(b)}')
+    print(f'a(x) = {Polynomial(a)}')
+    print(f'b(x) = {Polynomial(b)}')
     if args.algo == 'trivial':
-        print("Trivial", end="")
-        # print(f'Trivial: a(x) * b(x) = {Polynomial(trivial(a, b))}')
+        if args.output == '0':
+            print("Trivial", end="")
+        if args.output == '1':
+            print(f'Trivial: a(x) * b(x) = {Polynomial(trivial(a, b))}')
 
     if args.algo == 'FFT':
-        print("FFT", end="")
-        Polynomial(FFT(a, b))
-        # print(f'FFT :    a(x) * b(x) = {Polynomial(FFT(a, b))}')
-    # print(f'Diff :                 {Polynomial(FFT(a, b)) - Polynomial(a) * Polynomial(b)}')
-
+        if args.output == '0':
+            print("FFT", end="")
+        if args.output == '1':
+            print(f'FFT :    a(x) * b(x) = {Polynomial(FFT(a, b))}')
 
 if __name__ == '__main__':
     main()
